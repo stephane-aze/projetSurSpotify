@@ -1,247 +1,120 @@
 swagger: "2.0"
 info:
   version: "1.0.0"
-  title: "Todo list manager"
+  title: "Use API Spotify"
 host: "localhost:3000"
 basePath: "/api"
 schemes:
 - http
 tags:
-- name: Lists
-- name: List
-- name: List Tasks
-- name: List Task
+- name: Login/Sign Up
+- name: User Manager
+- name: User Space
 paths:
-  "/lists":
+  "/login":
     post:
       tags:
-      - Lists
+      - Login/Sign Up
       parameters:
       - name: list
         in: body
         schema:
-          $ref: '#/definitions/ListCreation'
-      summary: "Create a list"
+          $ref: '#/definitions/User'
+      summary: "Se connecter"
       responses:
         200:
           description: OK
           schema:
-            $ref: '#/definitions/List'
-    get:
+            $ref: '#/definitions/User'
+  "/sign_up":
+    post:
       tags:
-      - Lists
-      summary: "Get lists"
+      - Login/Sign Up
+      summary: "S'inscrire"
       responses:
         200:
           description: OK
           schema:
             type: array
             items:
-              $ref: '#/definitions/List'
-
-
-  "/lists/{listId}":
+              $ref: '#/definitions/UserCreation'
+  "/users/{userId}":
     parameters:
-      - name: listId
-        in: path
-        type: string
-        required: true
-      - name: list
-        in: body
-        schema:
-          $ref: '#/definitions/ListUpdate'
-    get:
-      tags:
-      - List
-      summary: "Find a list by ID"
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/List'
-        404:
-          description: Not Found
-          schema:
-            $ref: '#/definitions/NotFound'
-    patch:
-      tags:
-      - List
-      summary: "Update an list by ID"
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/List'
-        404:
-          description: Not Found
-          schema:
-            $ref: '#/definitions/NotFound'
-    delete:
-      tags:
-      - List
-      summary: "Delete a list by ID"
-      responses:
-        200:
-          description: OK
-          schema:
-            type: object
-            properties:
-              status:
-                type: string
-                enum:
-                - ok
-                - ko
-              deletedId:
-                type: string
-        404:
-          description: Not Found
-          schema:
-            $ref: '#/definitions/NotFound'
-
-  "/lists/{listId}/tasks":
-    parameters:
-    - name: listId
+    - name: userId
       in: path
       type: string
       required: true
-    - name: task
-      in: body
-      schema:
-        $ref: '#/definitions/TaskCreation'
-    get:
-      tags:
-      - List Tasks
-      summary: "Find tasks for a list"
-      responses:
-        200:
-          description: OK
-          schema:
-            type: array
-            items:
-              $ref: '#/definitions/Task'
-        404:
-          description: Not Found
-          schema:
-            $ref: '#/definitions/NotFound'
-    post:
-      tags:
-      - List Tasks
-      summary: "Create a task in a list"
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/Task'
 
-  "/lists/{listId}/tasks/{taskId}":
-    parameters:
-      - name: listId
-        in: path
-        type: string
-        required: true
-      - name: taskId
-        in: path
-        type: string
-        required: true
-      - name: list
-        in: body
-        schema:
-          $ref: '#/definitions/TaskUpdate'
-    get:
-      tags:
-      - List Task
-      summary: "Find a task by ID"
-      responses:
-        200:
-          description: OK
-          schema:
-            $ref: '#/definitions/Task'
-        404:
-          description: Not Found
-          schema:
-            $ref: '#/definitions/NotFound'
     patch:
       tags:
-      - List Task
-      summary: "Update an task by ID"
+      - User Manager
+      summary: "Update an user"
       responses:
         200:
           description: OK
           schema:
-            $ref: '#/definitions/Task'
+            $ref: '#/definitions/UserUpdate'
         404:
           description: Not Found
           schema:
             $ref: '#/definitions/NotFound'
-    delete:
+  "/space ":
+    patch:
       tags:
-      - List Task
-      summary: "Delete a task by ID"
+      - User Space
+      summary: "Update my user"
       responses:
         200:
           description: OK
           schema:
-            type: object
-            properties:
-              status:
-                type: string
-                enum:
-                - ok
-                - ko
-              deletedId:
-                type: string
+            $ref: '#/definitions/UserUpdate'
         404:
           description: Not Found
           schema:
             $ref: '#/definitions/NotFound'
-
+    get:
+      tags:
+      - User Space
+      summary: "See my profile"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/User'
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFound'
 
 definitions:
-  List:
+  User:
     type: object
     properties:
       "_id":
         type: number
-      name:
+      email:
         type: string
-      description:
+        format: email
+      password:
         type: string
-  ListCreation:
-    type: object
-    properties:
-      name:
-        type: string
-      description:
-        type: string
-  ListUpdate:
-    type: object
-    properties:
-      name:
-        type: string
-      description:
-        type: string
-  Task:
+  UserCreation:
     type: object
     properties:
       "_id":
+        type: number
+      email:
         type: string
-      name:
+        format: email
+      password:
         type: string
-      checked:
-        type: boolean
-        default: false
-  TaskCreation:
+  UserUpdate:
     type: object
     properties:
-      name:
+      email:
         type: string
-  TaskUpdate:
-    type: object
-    properties:
-      name:
+        format: email
+      password:
         type: string
-      checked:
-        type: boolean
   NotFound:
     type: object
     properties:
