@@ -1,11 +1,11 @@
 module.exports = {
-	apps: [
-		{
-			script: './src/index.js',
-			name: 'as',
-			watch: [
-				'src',
-			],
-		},
-	],
+  apps: [
+    {
+      script: './src/index.js',
+      name: 'projetsurspotify',
+      watch: [
+        'src',
+      ],
+    },
+  ],
 };

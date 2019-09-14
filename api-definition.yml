@@ -10,13 +10,16 @@ tags:
 - name: Login/Sign Up
 - name: User Manager
 - name: User Space
+- name: Favoris
+- name: Search
+- name: Favoris Albums
 paths:
   "/login":
     post:
       tags:
       - Login/Sign Up
       parameters:
-      - name: list
+      - name: user
         in: body
         schema:
           $ref: '#/definitions/User'
@@ -58,6 +61,128 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/NotFound'
+    delete:
+      tags:
+      - User Manager
+      summary: "Delete an user by ID"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                enum:
+                - ok
+                - ko
+              deletedId:
+                type: string
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFound'
+  "/favoris":
+
+    get:
+      parameters:
+      - name: first
+        type: number
+        in: query
+      - name: offset
+        type: number
+        in: query
+      - name: term
+        type: string
+        in: query
+      tags:
+      - Favoris
+      summary: "Find favoris"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/UserUpdate'
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFound'
+    post:
+        tags:
+        - Favoris
+        parameters:
+        - name: list
+          in: body
+          schema:
+            $ref: '#/definitions/FavorisCreation'
+        summary: "Create a favori"
+        responses:
+          200:
+            description: OK
+            schema:
+              $ref: '#/definitions/Favoris'
+          404:
+            description: Not Found
+            schema:
+              $ref: '#/definitions/NotFound'
+  "/favoris/{favorisId}":
+    parameters:
+    - name: userId
+      in: path
+      type: string
+      required: true
+    - name: favorisId
+      in: path
+      type: string
+      required: true
+    get:
+      tags:
+      - Favoris
+      summary: "Find favori by ID"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/FavorisUpdate'
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFound'
+    patch:
+      tags:
+      - Favoris
+      summary: "Update an favoris by ID"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Favoris'
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFound'
+    delete:
+        tags:
+        - Favoris
+        summary: "Delete a favoris by ID"
+        responses:
+          200:
+            description: OK
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  enum:
+                  - ok
+                  - ko
+                deletedId:
+                  type: string
+          404:
+            description: Not Found
+            schema:
+              $ref: '#/definitions/NotFound'
+
   "/space ":
     patch:
       tags:
@@ -81,6 +206,149 @@ paths:
           description: OK
           schema:
             $ref: '#/definitions/User'
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFound'
+
+  "/favoris/{favorisId}/albums":
+    parameters:
+    - name: favorisId
+      in: path
+      type: string
+      required: true
+    get:
+      parameters:
+      - name: first
+        type: number
+        in: query
+      - name: offset
+        type: number
+        in: query
+      - name: term
+        type: string
+        in: query
+      tags:
+      - Favoris Albums
+      summary: "Find album for a favoris"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: array
+            items:
+              $ref: '#/definitions/Albums'
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFound'
+    post:
+      tags:
+      - Favoris Albums
+      parameters:
+      - name: album
+        in: body
+        schema:
+          $ref: '#/definitions/AlbumsCreation'
+      summary: "Add Album to my favori"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Albums'
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFound'
+  "/favoris/{favorisId}/albums{albumId}":
+    parameters:
+      - name: albumId
+        in: path
+        type: string
+        required: true
+      - name: favorisId
+        in: path
+        type: string
+        required: true
+    get:
+      tags:
+      - Favoris Albums
+      summary: "Find an album by ID"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Albums'
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFound'
+    patch:
+      tags:
+      - Favoris Albums
+      parameters:
+      - name: favoris
+        in: body
+        schema:
+          $ref: '#/definitions/AlbumsUpdate'
+      summary: "Update an album by ID"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Albums'
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFound'
+    delete:
+      tags:
+      - Favoris Albums
+      summary: "Delete an album by ID"
+      responses:
+        200:
+          description: OK
+          schema:
+            type: object
+            properties:
+              status:
+                type: string
+                enum:
+                - ok
+                - ko
+              deletedId:
+                type: string
+        404:
+          description: Not Found
+          schema:
+            $ref: '#/definitions/NotFound'
+  "/search":
+    parameters:
+    - name: q
+      type: string
+      in: query
+    - name: offset
+      type: number
+      in: query
+    - name: limit
+      type: number
+      in: query
+    - name: type
+      type: string
+      enum:
+        - album
+        - artist
+        - playlist
+      in: query
+    post:
+      tags:
+      - Search
+      summary: "Search a album"
+      responses:
+        200:
+          description: OK
+          schema:
+            $ref: '#/definitions/Albums'
         404:
           description: Not Found
           schema:
@@ -115,6 +383,54 @@ definitions:
         format: email
       password:
         type: string
+  Favoris:
+    type: object
+    properties:
+      "_id":
+        type: number
+      name:
+        type: string
+      userId:
+        type: string
+  FavorisCreation:
+    type: object
+    required:
+    - name
+    - userId
+    properties:
+      name:
+        type: string
+      userId:
+        type: string
+  FavorisUpdate:
+    type: object
+    properties:
+      name:
+        type: string
+  Albums:
+    type: object
+    properties:
+      "_id":
+        type: number
+      nom:
+        type: string
+      artist:
+        type: string
+
+  AlbumsCreation:
+    type: object
+    properties:
+      name:
+        type: string
+      artist:
+        type: string
+  AlbumsUpdate:
+    type: object
+    properties:
+      name:
+        type: string
+      checked:
+        type: boolean
   NotFound:
     type: object
     properties:

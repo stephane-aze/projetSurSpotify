@@ -1,5 +1,5 @@
 {
-  "name": "spotify",
+  "name": "projetsurspotify",
   "version": "1.0.0",
   "description": "\"Un projet utilisant l'api spotify\"",
   "main": "src/index.js",
@@ -12,14 +12,19 @@
   "license": "ISC",
   "dependencies": {
     "@hapi/joi": "^15.1.0",
+    "bcrypt": "^3.0.6",
     "body-parser": "^1.19.0",
     "config": "^3.1.0",
     "cors": "^2.8.5",
     "error-to-json": "^1.1.0",
     "express": "^4.17.1",
     "helmet": "^3.18.0",
+    "jsonwebtoken": "^8.5.1",
+    "jwt-simple": "^0.5.6",
     "loadash": "^1.0.0",
+    "lodash": "^4.17.15",
     "mongodb": "^3.2.7",
+    "passport": "^0.4.0",
     "passport-jwt": "^4.0.0"
   },
   "devDependencies": {
